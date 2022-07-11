@@ -15,7 +15,7 @@ router = rb.create_router("user")
 @router.post("/create")
 def create_user_api(create_user: u_sc.UserCreate, db: Session = Depends(rb.get_db)):
     db_user = get_user_by_email_query(db=db, email=create_user.email)
-    if db_user:
+    if not db_user:
         raise HTTPException(status_code=400, detail="email already registered")
     return create_user_query(db=db, user=create_user)
 

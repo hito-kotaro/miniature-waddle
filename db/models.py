@@ -8,7 +8,7 @@ class Account(Base):
     __tablename__ = "accounts"
     __table_args__ = {"mysql_charset": "utf8mb4"}
     id = Column(Integer, primary_key=True, autoincrement=True)
-    role_id = Column(Integer, ForeignKey("roles.id"))
+    email = Column(String(100), nullable=False)
     hashed_password = Column(String(100))
     created_at = Column("created_at", DateTime, default=dt.now(), nullable=False)
     updated_at = Column(
@@ -24,6 +24,7 @@ class User(Base):
     __tablename__ = "users"
     __table_args__ = {"mysql_charset": "utf8mb4"}
     id = Column(Integer, primary_key=True, autoincrement=True)
+    account_id = Column(Integer, ForeignKey("accounts.id"))
     name = Column(String(30), nullable=False)
     email = Column(String(100), nullable=False)
     hashed_password = Column(String(100))
