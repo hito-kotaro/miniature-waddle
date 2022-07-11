@@ -2,46 +2,28 @@ from pydantic import BaseModel
 from typing import List, Optional
 
 
-class Message(BaseModel):
-    """return ok message"""
+class UserInfo(BaseModel):
+    id: int
+    name: str
+    email: str
+    role_id: Optional[int]
+    team_id: Optional[int]
 
-    message: str
+    class Config:
+        orm_mode = True
 
 
 class UserCreate(BaseModel):
     name: str
     email: str
-    role_id: int
-    team_id: int
-
-
-class UserBase(BaseModel):
-    """Base User scheme"""
-
-    name: str
-    email: str
-    role_id: int
-    guild_id: Optional[int]
-
-
-class UserRequest(UserBase):
-    id: Optional[int]
     password: str
-
-    class Config:
-        orm_mode = True
-
-
-class UserInfo(UserBase):
-    """User Info Response"""
-
-    id: int
-
-    class Config:
-        orm_mode = True
+    role_id: Optional[int]
+    team_id: Optional[int]
 
 
 class UserInfoAll(BaseModel):
+    """get user info all"""
+
     users: List[UserInfo]
 
     class Config:

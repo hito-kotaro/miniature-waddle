@@ -39,6 +39,7 @@ def auth_user(
     request: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(rb.get_db)
 ):
     pwd_cxt = CryptContext(schemes=["bcrypt"], deprecated="auto")
+    print(db)
     user = db.query(User).filter(User.email == request.email).first()
     if not user:
         raise HTTPException(

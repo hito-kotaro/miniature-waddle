@@ -14,20 +14,32 @@ def get_user_info_all(db: Session):
 
     # 全てのユーザー情報取得
     users = db.query(User).all()
+    print(users)
     return {"users": users}
 
 
-def create_user_query(db: Session, user: u_sc.UserRequest):
+def create_user_query(db: Session, user: u_sc.UserCreate):
     """create user by email and password"""
     hashed_password = Hash.get_password_hash(user.password)
+
+    if user.role_id is None:
+        role_id = None
+    else:
+        role_id = user.role_id
+
+    if user.team_id is None:
+        team_id = None
+    else:
+        team_id = user.team_id
 
     user = User(
         email=user.email,
         name=user.name,
         hashed_password=hashed_password,
-        role_id=user.role_id,
-        guild_id=user.guild_id,
+        role_id=role_id,
+        team_id=team_id,
     )
+
     db.add(user)
     db.commit()
     db.refresh(user)
