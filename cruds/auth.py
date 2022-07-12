@@ -55,58 +55,26 @@ def auth_user(
     request: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(rb.get_db)
 ):
 
-    if request.is_account:
-        account = db.query(Account).filter(Account.email == request.email).first()
+    user = (
+        db.query(User)
+        .filter(User.email == request.email, User.account_id == request.account_id)
+        .first()
+    )
+    exist_check(email=request.email)
+    password_check(
+        request_password=request.password, hashed_password=user.hashed_password
+    )
 
-        exist_check(email=request.email)
-        password_check(
-            request_password=request.password, hashed_password=account.hashed_password
-        )
-        access_token = create_access_token(data={"id": account.id, "name": account.id})
+    access_token = create_access_token(
+        data={"id": user.id, "name": user.name, "is_account": True}
+    )
 
-        return {
-            "access_token": access_token,
-            "token_type": "bearer",
-            "user_id": account.id,
-            "username": account.id,
-        }
-
-    else:
-        user = (
-            db.query(User)
-            .filter(User.email == request.email, User.account_id == request.account_id)
-            .first()
-        )
-        exist_check(email=request.email)
-        password_check(
-            request_password=request.password, hashed_password=user.hashed_password
-        )
-
-        access_token = create_access_token(data={"id": user.id, "name": user.name})
-
-        return {
-            "access_token": access_token,
-            "token_type": "bearer",
-            "user_id": user.id,
-            "username": user.name,
-        }
-
-    # if not user:
-    #     raise HTTPException(
-    #         status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials"
-    #     )
-
-    # if not pwd_cxt.verify(request.password, user.hashed_password):
-    #     raise HTTPException(
-    #         status_code=status.HTTP_401_UNAUTHORIZED, detail="Incorrect password"
-    #     )
-    # access_token = create_access_token(data={"id": user.id, "name": user.name})
-    # return {
-    #     "access_token": access_token,
-    #     "token_type": "bearer",
-    #     "user_id": user.id,
-    #     "username": user.name,
-    # }
+    return {
+        "access_token": access_token,
+        "token_type": "bearer",
+        "user_id": user.id,
+        "username": user.name,
+    }
 
 
 def get_user_by_username(db: Session, user_id: int, user_name: str):
@@ -117,6 +85,34 @@ def get_user_by_username(db: Session, user_id: int, user_name: str):
             detail=f"User with id {user_name} not found",
         )
     return user
+
+
+def get_user_by_id(db: Session, id: int, is_account: bool):
+    if is_account:
+        user = db.query(Account).filter(Account.id == id).first()
+        print(type(user))
+        format_user = {
+            "user_id": user.id,
+            "account_id": user.id,
+            "name": user.id,
+            "is_account": True,
+        }
+    else:
+        user = db.query(User).filter(User.id == id).first()
+        format_user = {
+            "user_id": user.id,
+            "account_id": user.account_id,
+            "name": user.name,
+            "is_account": False,
+        }
+
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"User with id {user.id} not found",
+        )
+
+    return format_user
 
 
 def get_current_user(
@@ -131,13 +127,13 @@ def get_current_user(
         payload = jwt.decode(token, SECRET_KEY, algorithms=ALGORITHM)
         user_name: str = payload.get("name")
         user_id: int = payload.get("id")
+        is_account: bool = payload.get("is_account")
         if user_name is None:
             raise credentials_exception
     except JWTError:
         raise credentials_exception
-
-    user = get_user_by_username(db, user_id, user_name)
-
+    user = get_user_by_id(db=db, id=user_id, is_account=is_account)
+    print(user["account_id"])
     if user is None:
         raise credentials_exception
     return user

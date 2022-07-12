@@ -1,6 +1,6 @@
 import random
 from sqlalchemy.orm import Session
-from db.models import Account
+from db.models import Account, User
 from utils.hash import Hash
 from schema import account_schema as a_sc
 
@@ -19,6 +19,7 @@ def get_account_by_id_query(db: Session, id: id):
 
 def create_account_query(db: Session, account: a_sc.AccountCreate):
     """create user by email and password"""
+    print(account)
     hashed_password = Hash.get_password_hash(account.password)
     root_role = 4
 
@@ -30,10 +31,17 @@ def create_account_query(db: Session, account: a_sc.AccountCreate):
     new_account = Account(
         id=account_id,
         email=account.email,
-        hashed_password=hashed_password,
-        role_id=root_role,
     )
 
+    new_user = User(
+        name=account.email,
+        email=account.email,
+        hashed_password=hashed_password,
+        role_id=root_role,
+        account_id=account_id,
+    )
+
+    db.add(new_user)
     db.add(new_account)
     db.commit()
     db.refresh(new_account)
