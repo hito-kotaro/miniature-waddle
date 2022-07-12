@@ -58,6 +58,7 @@ class Team(Base):
     __tablename__ = "teams"
     __table_args__ = {"mysql_charset": "utf8mb4"}
     id = Column(Integer, primary_key=True, autoincrement=True)
+    account_id = Column(Integer, ForeignKey("account.id"))
     name = Column(String(30), nullable=False)
     description = Column(Text())
     created_at = Column("created_at", DateTime, default=dt.now(), nullable=False)
@@ -77,7 +78,7 @@ class Quest(Base):
     title = Column(String(100), nullable=False)
     description = Column(Text(), nullable=True)
     reward = Column(Integer, nullable=False)
-    owner = Column(Integer, ForeignKey("users.id"))
+    owner_id = Column(Integer, ForeignKey("users.id"))
     status = Column(Boolean, nullable=False)
     created_at = Column("created_at", DateTime, default=dt.now(), nullable=False)
     updated_at = Column(
