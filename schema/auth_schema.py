@@ -2,8 +2,10 @@ from pydantic import BaseModel, Field
 
 
 class AuthRequest(BaseModel):
+    account_id: int
     email: str
     password: str
+    is_account: bool
 
 
 class AuthResponse(BaseModel):

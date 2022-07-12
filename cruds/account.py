@@ -20,17 +20,18 @@ def get_account_by_id_query(db: Session, id: id):
 def create_account_query(db: Session, account: a_sc.AccountCreate):
     """create user by email and password"""
     hashed_password = Hash.get_password_hash(account.password)
+    root_role = 4
 
     while True:
         account_id = random.randrange(10**8, 10**9)
         if not get_account_by_id_query(db=db, id=account_id):
-            print("dup")
             break
 
     new_account = Account(
         id=account_id,
         email=account.email,
         hashed_password=hashed_password,
+        role_id=root_role,
     )
 
     db.add(new_account)

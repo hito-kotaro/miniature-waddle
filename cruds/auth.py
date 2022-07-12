@@ -1,6 +1,6 @@
 import os
 from sqlalchemy.orm import Session
-from db.models import User
+from db.models import User, Account
 from fastapi.security import OAuth2PasswordBearer
 from typing import Optional
 from datetime import datetime, timedelta
@@ -35,28 +35,78 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
     return encoded_jwt
 
 
-def auth_user(
-    request: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(rb.get_db)
-):
-    pwd_cxt = CryptContext(schemes=["bcrypt"], deprecated="auto")
-    print(db)
-    user = db.query(User).filter(User.email == request.email).first()
-    if not user:
+def exist_check(email: str):
+    print(email)
+    if not email:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials"
         )
 
-    if not pwd_cxt.verify(request.password, user.hashed_password):
+
+def password_check(request_password: str, hashed_password: str):
+    pwd_cxt = CryptContext(schemes=["bcrypt"], deprecated="auto")
+    if not pwd_cxt.verify(request_password, hashed_password):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED, detail="Incorrect password"
         )
-    access_token = create_access_token(data={"id": user.id, "name": user.name})
-    return {
-        "access_token": access_token,
-        "token_type": "bearer",
-        "user_id": user.id,
-        "username": user.name,
-    }
+
+
+def auth_user(
+    request: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(rb.get_db)
+):
+
+    if request.is_account:
+        account = db.query(Account).filter(Account.email == request.email).first()
+
+        exist_check(email=request.email)
+        password_check(
+            request_password=request.password, hashed_password=account.hashed_password
+        )
+        access_token = create_access_token(data={"id": account.id, "name": account.id})
+
+        return {
+            "access_token": access_token,
+            "token_type": "bearer",
+            "user_id": account.id,
+            "username": account.id,
+        }
+
+    else:
+        user = (
+            db.query(User)
+            .filter(User.email == request.email, User.account_id == request.account_id)
+            .first()
+        )
+        exist_check(email=request.email)
+        password_check(
+            request_password=request.password, hashed_password=user.hashed_password
+        )
+
+        access_token = create_access_token(data={"id": user.id, "name": user.name})
+
+        return {
+            "access_token": access_token,
+            "token_type": "bearer",
+            "user_id": user.id,
+            "username": user.name,
+        }
+
+    # if not user:
+    #     raise HTTPException(
+    #         status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials"
+    #     )
+
+    # if not pwd_cxt.verify(request.password, user.hashed_password):
+    #     raise HTTPException(
+    #         status_code=status.HTTP_401_UNAUTHORIZED, detail="Incorrect password"
+    #     )
+    # access_token = create_access_token(data={"id": user.id, "name": user.name})
+    # return {
+    #     "access_token": access_token,
+    #     "token_type": "bearer",
+    #     "user_id": user.id,
+    #     "username": user.name,
+    # }
 
 
 def get_user_by_username(db: Session, user_id: int, user_name: str):
