@@ -1,6 +1,6 @@
 import os
 from sqlalchemy.orm import Session
-from db.models import User, Account
+from db.models import User
 from fastapi.security import OAuth2PasswordBearer
 from typing import Optional
 from datetime import datetime, timedelta
@@ -35,9 +35,8 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
     return encoded_jwt
 
 
-def exist_check(email: str):
-    print(email)
-    if not email:
+def exist_check(user):
+    if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials"
         )
@@ -54,20 +53,18 @@ def password_check(request_password: str, hashed_password: str):
 def auth_user(
     request: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(rb.get_db)
 ):
-
     user = (
         db.query(User)
         .filter(User.email == request.email, User.account_id == request.account_id)
         .first()
     )
-    exist_check(email=request.email)
+
+    exist_check(user=user)
     password_check(
         request_password=request.password, hashed_password=user.hashed_password
     )
 
-    access_token = create_access_token(
-        data={"id": user.id, "name": user.name, "is_account": True}
-    )
+    access_token = create_access_token(data={"id": user.id, "name": user.name})
 
     return {
         "access_token": access_token,
@@ -87,24 +84,8 @@ def get_user_by_username(db: Session, user_id: int, user_name: str):
     return user
 
 
-def get_user_by_id(db: Session, id: int, is_account: bool):
-    if is_account:
-        user = db.query(Account).filter(Account.id == id).first()
-        print(type(user))
-        format_user = {
-            "user_id": user.id,
-            "account_id": user.id,
-            "name": user.id,
-            "is_account": True,
-        }
-    else:
-        user = db.query(User).filter(User.id == id).first()
-        format_user = {
-            "user_id": user.id,
-            "account_id": user.account_id,
-            "name": user.name,
-            "is_account": False,
-        }
+def get_user_by_id(db: Session, id: int):
+    user = db.query(User).filter(User.id == id).first()
 
     if not user:
         raise HTTPException(
@@ -112,7 +93,7 @@ def get_user_by_id(db: Session, id: int, is_account: bool):
             detail=f"User with id {user.id} not found",
         )
 
-    return format_user
+    return user
 
 
 def get_current_user(
@@ -127,12 +108,11 @@ def get_current_user(
         payload = jwt.decode(token, SECRET_KEY, algorithms=ALGORITHM)
         user_name: str = payload.get("name")
         user_id: int = payload.get("id")
-        is_account: bool = payload.get("is_account")
         if user_name is None:
             raise credentials_exception
     except JWTError:
         raise credentials_exception
-    user = get_user_by_id(db=db, id=user_id, is_account=is_account)
+    user = get_user_by_id(db=db, id=user_id)
     print(user["account_id"])
     if user is None:
         raise credentials_exception
