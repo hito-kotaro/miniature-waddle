@@ -58,7 +58,7 @@ class Team(Base):
     __tablename__ = "teams"
     __table_args__ = {"mysql_charset": "utf8mb4"}
     id = Column(Integer, primary_key=True, autoincrement=True)
-    account_id = Column(Integer, ForeignKey("account.id"))
+    account_id = Column(Integer, ForeignKey("accounts.id"))
     name = Column(String(30), nullable=False)
     description = Column(Text())
     created_at = Column("created_at", DateTime, default=dt.now(), nullable=False)
