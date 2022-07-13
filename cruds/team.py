@@ -22,7 +22,23 @@ def create_team(db: Session, account_id: int, team_name: str, description: str):
 
 def get_all_team(db: Session, account_id: int):
     teams = db.query(Team).filter(Team.account_id == account_id).all()
-    return {"teams": teams}
+
+    team_list = []
+    for t in teams:
+        team = {
+            "id": t.id,
+            "name": t.name,
+            "description": t.description,
+            "penalty": 0,
+            "point": 0,
+            "created_at": t.created_at,
+            "updated_at": t.updated_at,
+        }
+        team_list.append(team)
+
+    print(team_list)
+    print(type(teams[0].created_at))
+    return {"teams": team_list}
 
 
 def get_user_by_id(db: Session, account_id: int, team_id: int):
