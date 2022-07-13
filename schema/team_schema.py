@@ -1,10 +1,10 @@
-from typing import List
+from typing import List, Optional
 from pydantic import BaseModel
 
 
 class CreateTeam(BaseModel):
     name: str
-    description: str
+    description: Optional[str]
 
 
 class ResponseTeam(BaseModel):

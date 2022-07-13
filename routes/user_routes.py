@@ -20,6 +20,7 @@ def create_user_api(
     # current_user: str = Depends(get_current_user),
 ):
     print(create_user)
+    # if db_userでraiseできるようにgeet_user_by_email_queryを修正する
     db_user = get_user_by_email_query(db=db, email=create_user.email)
     if not db_user:
         raise HTTPException(status_code=400, detail="email already registered")

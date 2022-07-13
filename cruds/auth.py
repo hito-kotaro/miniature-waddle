@@ -113,7 +113,6 @@ def get_current_user(
     except JWTError:
         raise credentials_exception
     user = get_user_by_id(db=db, id=user_id)
-    print(user["account_id"])
     if user is None:
         raise credentials_exception
     return user
