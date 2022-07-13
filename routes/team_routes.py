@@ -11,24 +11,24 @@ router = rb.create_router("team")
 # チームを作成する
 
 
-@router.post("/create")
+@router.post("/create", response_model=t_sc.CreateTeamResponse)
 def create_team_api(
-    team: t_sc.CreateTeam,
+    new_team: t_sc.CreateTeam,
     db: Session = Depends(rb.get_db),
     current_user: str = Depends(get_current_user),
 ):
+    print(new_team)
     # アカウント内での重複確認
     team = get_team_by_id(
-        db=db, account_id=current_user.account_id, team=create_team.name
+        db=db, account_id=current_user.account_id, team_name=new_team.name
     )
     if team:
         raise HTTPException(status_code=400, detail="team already exists")
-
     return create_team(
         db=db,
         account_id=current_user.account_id,
-        team_name=create_team.name,
-        description=create_team.description,
+        team_name=new_team.name,
+        description=new_team.description,
     )
 
 

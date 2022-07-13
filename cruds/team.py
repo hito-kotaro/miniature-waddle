@@ -1,6 +1,5 @@
 from db.models import Team
 from sqlalchemy.orm import Session
-from schema import team_schema as t_sc
 
 
 # アカウントのチームを名前で検索

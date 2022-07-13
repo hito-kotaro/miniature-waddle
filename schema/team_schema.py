@@ -7,6 +7,14 @@ class CreateTeam(BaseModel):
     description: Optional[str]
 
 
+class CreateTeamResponse(CreateTeam):
+    id: int
+    account_id: int
+
+    class Config:
+        orm_mode = True
+
+
 class ResponseTeam(BaseModel):
     id: int
     name: str
