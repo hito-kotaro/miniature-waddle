@@ -37,13 +37,4 @@ def get_all_team(db: Session, account_id: int):
         team_list.append(team)
 
     print(team_list)
-    print(type(teams[0].created_at))
     return {"teams": team_list}
-
-
-def get_user_by_id(db: Session, account_id: int, team_id: int):
-    team = (
-        db.query(Team).filter(Team.account_id == account_id, Team.id == team_id).first()
-    )
-
-    return team

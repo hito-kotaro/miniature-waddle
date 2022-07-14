@@ -4,6 +4,12 @@ from utils.hash import Hash
 import schema.user_schema as u_sc
 
 
+# チームIDからチームメンバーを検索する。
+def get_users_by_team_id(db: Session, team_id):
+    users = db.query(User).filter(User.team_id == team_id).all()
+    return users
+
+
 def get_user_by_email_query(db: Session, email: str):
     """get user by email"""
     account = db.query(Account).filter(Account.email == email).first()

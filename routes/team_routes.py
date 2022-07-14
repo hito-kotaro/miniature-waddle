@@ -1,6 +1,6 @@
 from fastapi import Depends, HTTPException
 from sqlalchemy.orm import Session
-from cruds.team import get_team_by_id, create_team, get_all_team, get_user_by_id
+from cruds.team import get_team_by_id, create_team, get_all_team
 import schema.team_schema as t_sc
 from routes import router_base as rb
 from cruds.auth import get_current_user
@@ -42,10 +42,11 @@ def get_all_team_api(
 
 
 # 特定のIDのチームを取得
-@router.get("/{id}", response_model=t_sc.ResponseTeam)
-def get_team_api(
-    id: int,
-    db: Session = Depends(rb.get_db),
-    current_user: str = Depends(get_current_user),
-):
-    return get_user_by_id(db=db, account_id=current_user.account_id, team_id=id)
+# @router.get("/{id}", response_model=t_sc.ResponseTeam)
+# def get_team_api(
+#     id: int,
+#     db: Session = Depends(rb.get_db),
+#     current_user: str = Depends(get_current_user),
+# ):
+
+#     return 0
