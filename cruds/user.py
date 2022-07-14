@@ -26,7 +26,7 @@ def get_user_by_email_query(db: Session, email: str):
 
 def get_user_all_in_account(db: Session, current_user):
     """get user all"""
-    account_id = current_user["account_id"]
+    account_id = current_user.account_id
     # アカウント内の全てのユーザー情報取得
     users = db.query(User).filter(User.account_id == account_id).all()
     print(users)
