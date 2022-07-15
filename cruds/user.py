@@ -48,7 +48,7 @@ def create_user_query(db: Session, user: u_sc.UserCreate, account_id: int):
         email=user.email,
         name=user.name,
         hashed_password=hashed_password,
-        account_id=user.account_id,
+        account_id=account_id,
         role_id=user.role_id,
         team_id=user.team_id,
     )
