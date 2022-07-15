@@ -39,28 +39,18 @@ def get_user_info_by_id(db: Session, current_user: dict):
     return {"message": "ok"}
 
 
-def create_user_query(db: Session, user: u_sc.UserCreate):
+def create_user_query(db: Session, user: u_sc.UserCreate, account_id: int):
     """create user by email and password"""
     print(user)
     hashed_password = Hash.get_password_hash(user.password)
-
-    if user.role_id is None:
-        role_id = None
-    else:
-        role_id = user.role_id
-
-    if user.team_id is None:
-        team_id = None
-    else:
-        team_id = user.team_id
 
     user = User(
         email=user.email,
         name=user.name,
         hashed_password=hashed_password,
         account_id=user.account_id,
-        role_id=role_id,
-        team_id=team_id,
+        role_id=user.role_id,
+        team_id=user.team_id,
     )
 
     db.add(user)

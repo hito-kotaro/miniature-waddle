@@ -17,7 +17,6 @@ class UserCreate(BaseModel):
     name: str
     email: str
     password: str
-    account_id: int
     role_id: int
     team_id: Optional[int]
 
