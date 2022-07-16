@@ -75,6 +75,7 @@ class Quest(Base):
     __tablename__ = "quests"
     __table_args__ = {"mysql_charset": "utf8mb4"}
     id = Column(Integer, primary_key=True, autoincrement=True)
+    account_id = Column(Integer, ForeignKey("accounts.id"))
     title = Column(String(100), nullable=False)
     description = Column(Text(), nullable=True)
     reward = Column(Integer, nullable=False)
@@ -94,6 +95,7 @@ class ApproveRequest(Base):
     __tablename__ = "approve_requests"
     __table_args__ = {"mysql_charset": "utf8mb4"}
     id = Column(Integer, primary_key=True, autoincrement=True)
+    account_id = Column(Integer, ForeignKey("accounts.id"))
     title = Column(String(30), nullable=False)
     description = Column(Text(), nullable=True)
     quest_id = Column(Integer, ForeignKey("quests.id"))
@@ -113,6 +115,7 @@ class Penalty(Base):
     __tablename__ = "penalties"
     __table_args__ = {"mysql_charset": "utf8mb4"}
     id = Column(Integer, primary_key=True, autoincrement=True)
+    account_id = Column(Integer, ForeignKey("accounts.id"))
     title = Column(String(30), nullable=False)
     owner_id = Column(Integer, ForeignKey("users.id"))
     description = Column(Text(), nullable=True)
@@ -123,6 +126,7 @@ class IssuedPenalty(Base):
     __tablename__ = "issued_penalties"
     __table_args__ = {"mysql_charset": "utf8mb4"}
     id = Column(Integer, primary_key=True, autoincrement=True)
+    account_id = Column(Integer, ForeignKey("accounts.id"))
     authorizer_id = Column(Integer, ForeignKey("users.id"))
     team_id = Column(Integer, ForeignKey("users.id"))
     created_at = Column("created_at", DateTime, default=dt.now(), nullable=False)

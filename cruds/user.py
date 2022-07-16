@@ -36,7 +36,7 @@ def get_user_all_in_account(db: Session, current_user):
 def get_user_info_by_id(db: Session, current_user: dict):
     user = db.query(User).filter(User.id == current_user.id).first()
     print(user)
-    return {"message": "ok"}
+    return user
 
 
 def create_user_query(db: Session, user: u_sc.UserCreate, account_id: int):
