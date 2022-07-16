@@ -29,7 +29,7 @@ def get_approve_request_query(db: Session, account_id: int):
 
         approve = {
             "id": a.ApproveRequest.id,
-            "title": a.ApproveRequest.id,
+            "title": a.ApproveRequest.title,
             "description": a.ApproveRequest.description,
             "applicant": applicant,
             "quest_title": a.Quest.title,
