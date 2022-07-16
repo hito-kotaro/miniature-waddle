@@ -101,6 +101,7 @@ class ApproveRequest(Base):
     quest_id = Column(Integer, ForeignKey("quests.id"))
     applicant_id = Column(Integer, ForeignKey("users.id"))
     authorizer_id = Column(Integer, ForeignKey("users.id"))
+    status = Column(String(30), nullable=False)
     created_at = Column("created_at", DateTime, default=dt.now(), nullable=False)
     updated_at = Column(
         "updated_at",
