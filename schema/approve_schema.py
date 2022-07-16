@@ -24,9 +24,6 @@ class ApproveInfoAll(BaseModel):
 
 
 class CreateApproveRequest(BaseModel):
-    account_id: int
     title: str
     description: str
     quest_id: int
-    applicant_id: int
-    status: str
