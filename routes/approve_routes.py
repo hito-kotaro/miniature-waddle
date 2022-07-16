@@ -1,14 +1,29 @@
 from fastapi import Depends
 from sqlalchemy.orm import Session
+from cruds.approve import create_approve_request_query, get_approve_request_query
 from routes import router_base as rb
 from cruds.auth import get_current_user
-
+import schema.approve_schema as a_sc
 
 router = rb.create_router("approve")
 
 
-@router.get("/")
+@router.get("/", response_model=a_sc.ApproveInfoAll)
 def get_approve_all_api(
     db: Session = Depends(rb.get_db), current_user: str = Depends(get_current_user)
 ):
-    return {"message": "ok"}
+    return get_approve_request_query(db=db, account_id=current_user.account_id)
+
+
+@router.post("/create")
+def create_approve_request_api(
+    approve_requests: a_sc.CreateApproveRequest,
+    db: Session = Depends(rb.get_db),
+    current_user: str = Depends(get_current_user),
+):
+    return create_approve_request_query(
+        db=db,
+        account_id=current_user.account_id,
+        user_id=current_user.id,
+        ar=approve_requests,
+    )
