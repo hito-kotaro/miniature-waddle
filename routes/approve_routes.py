@@ -1,6 +1,10 @@
 from fastapi import Depends
 from sqlalchemy.orm import Session
-from cruds.approve import create_approve_request_query, get_approve_request_query
+from cruds.approve import (
+    create_approve_request_query,
+    get_approve_request_query,
+    update_approve_request_query,
+)
 from routes import router_base as rb
 from cruds.auth import get_current_user
 import schema.approve_schema as a_sc
@@ -26,4 +30,15 @@ def create_approve_request_api(
         account_id=current_user.account_id,
         user_id=current_user.id,
         ar=approve_requests,
+    )
+
+
+@router.put("/update")
+def update_approve_request_api(
+    update_request: a_sc.UpdateApproveRequest,
+    db: Session = Depends(rb.get_db),
+    current_user: str = Depends(get_current_user),
+):
+    return update_approve_request_query(
+        db=db, authorizer_id=current_user.id, update_request=update_request
     )

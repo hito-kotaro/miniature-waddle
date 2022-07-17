@@ -27,3 +27,8 @@ class CreateApproveRequest(BaseModel):
     title: str
     description: str
     quest_id: int
+
+
+class UpdateApproveRequest(BaseModel):
+    ar_id: int
+    new_status: str

@@ -62,3 +62,19 @@ def create_approve_request_query(
     db.commit()
 
     return {"message": "ok"}
+
+
+def update_approve_request_query(
+    db: Session, authorizer_id: int, update_request: a_sc.UpdateApproveRequest
+):
+    ar = (
+        db.query(ApproveRequest)
+        .filter(ApproveRequest.id == update_request.ar_id)
+        .first()
+    )
+    print(ar)
+    ar.status = update_request.new_status
+    ar.authorizer_id = authorizer_id
+    db.commit()
+
+    return {"message": f"update_id = {ar.id}"}
