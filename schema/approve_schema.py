@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import List
+from typing import List, Optional
 from pydantic import BaseModel
 
 
@@ -12,6 +12,7 @@ class ApproveInfo(BaseModel):
     quest_owner: str
     quest_description: str
     quest_created_at: datetime
+    authorizer: Optional[str]
     reward: int
     status: str
 

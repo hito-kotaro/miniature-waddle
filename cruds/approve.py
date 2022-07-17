@@ -11,7 +11,6 @@ def get_approve_request_query(db: Session, account_id: int):
             Quest,
         )
         .filter(
-            ApproveRequest.account_id == account_id,
             ApproveRequest.quest_id == Quest.id,
         )
         .all()
@@ -19,6 +18,7 @@ def get_approve_request_query(db: Session, account_id: int):
 
     approve_list = []
     for a in approves:
+        print(a.ApproveRequest.authorizer_id)
         applicant = get_user_name_by_id(
             db=db, account_id=account_id, user_id=a.ApproveRequest.applicant_id
         )
@@ -39,6 +39,13 @@ def get_approve_request_query(db: Session, account_id: int):
             "reward": a.Quest.reward,
             "status": a.ApproveRequest.status,
         }
+
+        if a.ApproveRequest.authorizer_id:
+            authorizer = get_user_name_by_id(
+                db=db, account_id=account_id, user_id=a.ApproveRequest.authorizer_id
+            )
+            print(authorizer)
+            approve["authorizer"] = authorizer
 
         approve_list.append(approve)
 
