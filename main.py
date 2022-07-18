@@ -9,6 +9,7 @@ from routes import (
     team_routes,
     quest_routes,
     approve_routes,
+    penalty_routes,
 )
 
 # from db.migrate import reset_database
@@ -25,7 +26,7 @@ app.include_router(auth_routes.router)
 app.include_router(user_routes.router)
 app.include_router(team_routes.router)
 app.include_router(quest_routes.router)
-
+app.include_router(penalty_routes.router)
 
 app.add_middleware(
     CORSMiddleware,

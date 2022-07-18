@@ -128,6 +128,7 @@ class IssuedPenalty(Base):
     __tablename__ = "issued_penalties"
     __table_args__ = {"mysql_charset": "utf8mb4"}
     id = Column(Integer, primary_key=True, autoincrement=True)
+    penalty_id = Column(Integer, ForeignKey("penalties.id"))
     account_id = Column(Integer, ForeignKey("accounts.id"))
     authorizer_id = Column(Integer, ForeignKey("users.id"))
     team_id = Column(Integer, ForeignKey("users.id"))
