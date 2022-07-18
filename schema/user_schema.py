@@ -18,6 +18,12 @@ class UserPassUpdate(BaseModel):
     new_password: str
 
 
+class UserAttributepdate(BaseModel):
+    user_id: int
+    role_id: int
+    team_id: int
+
+
 class SmallUserInfo(BaseModel):
     name: str
     team: str

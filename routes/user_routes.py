@@ -7,6 +7,7 @@ from cruds.user import (
     get_user_by_email_query,
     get_user_all_in_account,
     get_user_small_info_by_id,
+    update_attribute_query,
     updpate_user_password,
 )
 from cruds.auth import get_current_user
@@ -59,3 +60,13 @@ def upodate_password_api(
     return updpate_user_password(
         db=db, user_id=current_user.id, new_password=update.new_password
     )
+
+
+@router.patch("/attribute")
+def update_attribute_api(
+    new_attribute: u_sc.UserAttributepdate,
+    db: Session = Depends(rb.get_db),
+    current_user: str = Depends(get_current_user),
+):
+
+    return update_attribute_query(db=db, new_attribute=new_attribute)

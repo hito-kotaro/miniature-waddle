@@ -118,3 +118,14 @@ def get_user_small_info_by_id(db: Session, user_id: int):
     }
 
     return small_info
+
+
+# ユーザーの属性を更新する
+def update_attribute_query(db: Session, new_attribute: u_sc.UserAttributepdate):
+    user = db.query(User).filter(User.id == new_attribute.user_id).first()
+    user.role_id = new_attribute.role_id
+    user.team_id = new_attribute.team_id
+
+    db.commit()
+
+    return {"message": "attribute update"}
