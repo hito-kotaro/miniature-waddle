@@ -58,6 +58,7 @@ def create_user_query(db: Session, user: u_sc.UserCreate, account_id: int):
         account_id=account_id,
         role_id=user.role_id,
         team_id=user.team_id,
+        point=0
     )
 
     db.add(user)

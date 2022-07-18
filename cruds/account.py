@@ -39,6 +39,7 @@ def create_account_query(db: Session, account: a_sc.AccountCreate):
         hashed_password=hashed_password,
         role_id=root_role,
         account_id=account_id,
+        point=0,
     )
 
     db.add(new_user)

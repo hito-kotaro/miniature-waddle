@@ -29,6 +29,7 @@ class User(Base):
     hashed_password = Column(String(100))
     role_id = Column(Integer, ForeignKey("roles.id"))
     team_id = Column(Integer, ForeignKey("teams.id"))
+    point = Column(Integer, nullable=False)
     created_at = Column("created_at", DateTime, default=dt.now(), nullable=False)
     updated_at = Column(
         "updated_at",
