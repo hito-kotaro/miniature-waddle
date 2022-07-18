@@ -13,6 +13,16 @@ class UserInfo(BaseModel):
         orm_mode = True
 
 
+class SmallUserInfo(BaseModel):
+    name: str
+    team: str
+    role: str
+    point: int
+
+    class Config:
+        orm_mode = True
+
+
 class UserCreate(BaseModel):
     name: str
     email: str

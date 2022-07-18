@@ -6,7 +6,7 @@ from cruds.user import (
     create_user_query,
     get_user_by_email_query,
     get_user_all_in_account,
-    get_user_info_by_id,
+    get_user_small_info_by_id,
 )
 from cruds.auth import get_current_user
 
@@ -39,11 +39,10 @@ def get_user_all_api(
 
 
 # 特定IDのユーザー情報を取得
-@router.get("/{id}")
+@router.get("/{id}", response_model=u_sc.SmallUserInfo)
 def get_user_api(
     id: int,
     db: Session = Depends(rb.get_db),
     current_user: str = Depends(get_current_user),
 ):
-    print(current_user)
-    return get_user_info_by_id(db=db, current_user=current_user)
+    return get_user_small_info_by_id(db=db, user_id=current_user.id)
