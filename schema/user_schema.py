@@ -6,6 +6,7 @@ class UserInfo(BaseModel):
     id: int
     name: str
     email: str
+    point: int
     role_id: Optional[int]
     team_id: Optional[int]
 
