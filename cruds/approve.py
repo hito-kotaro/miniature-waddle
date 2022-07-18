@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 from cruds.user import get_user_name_by_id
-from db.models import ApproveRequest, Quest
+from db.models import ApproveRequest, Quest, User
 import schema.approve_schema as a_sc
 
 
@@ -71,17 +71,35 @@ def create_approve_request_query(
     return {"message": "ok"}
 
 
+def add_point(db: Session, user_id: int, add_point: int):
+    user = db.query(User).filter(User.id == user_id).first()
+    before = user.point
+    user.point = before + add_point
+    db.commit()
+
+
 def update_approve_request_query(
     db: Session, authorizer_id: int, update_request: a_sc.UpdateApproveRequest
 ):
+
+    # new_statusがapprovedの場合、
+    # applicantのpointにquestのrewardを追加する
+    # app_pointを探す
+
     ar = (
-        db.query(ApproveRequest)
-        .filter(ApproveRequest.id == update_request.ar_id)
+        db.query(ApproveRequest, Quest)
+        .filter(
+            ApproveRequest.id == update_request.ar_id,
+            ApproveRequest.quest_id == Quest.id,
+        )
         .first()
     )
+
+    add_point(db=db, user_id=ar.ApproveRequest.applicant_id, add_point=ar.Quest.reward)
+
     print(ar)
-    ar.status = update_request.new_status
-    ar.authorizer_id = authorizer_id
+    ar.ApproveRequest.status = update_request.new_status
+    ar.ApproveRequest.authorizer_id = authorizer_id
     db.commit()
 
-    return {"message": f"update_id = {ar.id}"}
+    return {"message": f"update_id = {ar.ApproveRequest.id}"}
