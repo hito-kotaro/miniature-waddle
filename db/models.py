@@ -62,6 +62,7 @@ class Team(Base):
     account_id = Column(Integer, ForeignKey("accounts.id"))
     name = Column(String(30), nullable=False)
     description = Column(Text())
+    penalty = Column(Integer, nullable=False)
     created_at = Column("created_at", DateTime, default=dt.now(), nullable=False)
     updated_at = Column(
         "updated_at",

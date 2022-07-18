@@ -43,6 +43,7 @@ def get_user_all_in_account(db: Session, current_user):
     return {"users": users}
 
 
+# idからユーザー名を取得
 def get_user_name_by_id(db: Session, account_id: int, user_id: int):
     user = (
         db.query(User).filter(User.account_id == account_id, User.id == user_id).first()
