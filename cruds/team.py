@@ -13,7 +13,9 @@ def get_team_by_id(db: Session, account_id: int, team_name: str):
 
 
 def create_team(db: Session, account_id: int, team_name: str, description: str):
-    team = Team(name=team_name, description=description, account_id=account_id)
+    team = Team(
+        name=team_name, description=description, account_id=account_id, penalty=0
+    )
     db.add(team)
     db.commit()
     db.refresh(team)
