@@ -94,7 +94,7 @@ def get_user_small_info_by_id(db: Session, user_id: int):
     point = summary_point_by_user_id(db=db, user_id=user_id)
 
     if user.User.team_id:
-        team = db.query(Team).filter(Team.id == user.team_id).first()
+        team = db.query(Team).filter(Team.id == user.User.team_id).first()
         team_name = team.name
     else:
         team_name = "no team"
@@ -106,5 +106,4 @@ def get_user_small_info_by_id(db: Session, user_id: int):
         "point": point,
     }
 
-    # print(small_info)
     return small_info
