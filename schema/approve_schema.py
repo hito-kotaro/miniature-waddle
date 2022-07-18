@@ -8,6 +8,7 @@ class ApproveInfo(BaseModel):
     title: str
     description: str
     applicant: str
+    applicant_id: int
     quest_title: str
     quest_owner: str
     quest_description: str
