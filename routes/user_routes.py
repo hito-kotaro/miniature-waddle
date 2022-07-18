@@ -7,6 +7,7 @@ from cruds.user import (
     get_user_by_email_query,
     get_user_all_in_account,
     get_user_small_info_by_id,
+    updpate_user_password,
 )
 from cruds.auth import get_current_user
 
@@ -46,3 +47,15 @@ def get_user_api(
     current_user: str = Depends(get_current_user),
 ):
     return get_user_small_info_by_id(db=db, user_id=current_user.id)
+
+
+# パスワードの変更
+@router.patch("/password")
+def upodate_password_api(
+    update: u_sc.UserPassUpdate,
+    db: Session = Depends(rb.get_db),
+    current_user: str = Depends(get_current_user),
+):
+    return updpate_user_password(
+        db=db, user_id=current_user.id, new_password=update.new_password
+    )

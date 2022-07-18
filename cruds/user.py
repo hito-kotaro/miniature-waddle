@@ -10,6 +10,16 @@ def get_users_by_team_id(db: Session, team_id):
     return users
 
 
+# ユーザーのパスワード更新
+def updpate_user_password(db: Session, user_id: int, new_password: str):
+    user = db.query(User).filter(User.id == user_id).first()
+    hashed_password = Hash.get_password_hash(new_password)
+    user.hashed_password = hashed_password
+
+    db.commit()
+    return {"message": "password change"}
+
+
 def get_user_by_email_query(db: Session, email: str):
     """get user by email"""
     account = db.query(Account).filter(Account.email == email).first()

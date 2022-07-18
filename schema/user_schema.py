@@ -14,6 +14,10 @@ class UserInfo(BaseModel):
         orm_mode = True
 
 
+class UserPassUpdate(BaseModel):
+    new_password: str
+
+
 class SmallUserInfo(BaseModel):
     name: str
     team: str
