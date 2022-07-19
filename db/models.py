@@ -132,7 +132,7 @@ class IssuedPenalty(Base):
     penalty_id = Column(Integer, ForeignKey("penalties.id"))
     account_id = Column(Integer, ForeignKey("accounts.id"))
     authorizer_id = Column(Integer, ForeignKey("users.id"))
-    team_id = Column(Integer, ForeignKey("users.id"))
+    team_id = Column(Integer, ForeignKey("teams.id"))
     created_at = Column("created_at", DateTime, default=dt.now(), nullable=False)
     updated_at = Column(
         "updated_at",
