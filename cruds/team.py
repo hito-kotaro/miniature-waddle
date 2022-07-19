@@ -31,7 +31,7 @@ def get_all_team(db: Session, account_id: int):
             "id": t.id,
             "name": t.name,
             "description": t.description,
-            "penalty": 0,
+            "penalty": t.penalty,
             "point": 0,
             "created_at": t.created_at,
             "updated_at": t.updated_at,
