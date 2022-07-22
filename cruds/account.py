@@ -76,11 +76,16 @@ def get_score_info_query(db: Session, account_id: int, user_id: int, team_id: in
 
     # 個人のポイント　OK
     user_score = user.point
-    # チームのポイント 同じチームIDを持つuserのpointを合計する
-    team_score = -1 * team.penalty
 
-    for u in users:
-        team_score += u.point
+    if user.team_id:
+        # チームのポイント 初期値ペナルティー分マイナス
+        team_score = -1 * team.penalty
+
+        for u in users:
+            team_score += u.point
+    else:
+        # チーム所属なしなので0
+        team_score = 0
 
     account_score = get_account_score(db=db, account_id=account_id)
 
