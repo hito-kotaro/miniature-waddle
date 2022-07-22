@@ -1,6 +1,6 @@
 import random
 from sqlalchemy.orm import Session
-from db.models import Account, User
+from db.models import Account, Team, User
 from utils.hash import Hash
 from schema import account_schema as a_sc
 
@@ -48,3 +48,23 @@ def create_account_query(db: Session, account: a_sc.AccountCreate):
     db.refresh(new_account)
     print(new_account)
     return new_account
+
+
+def get_score_info_query(db: Session, account_id: int, user_id: int, team_id: int):
+    user = db.query(User).filter(User.id == user_id).first()
+    users = db.query(User).filter(User.account_id == account_id).all()
+    team = db.query(Team).filter(Team.id == team_id).first()
+
+    team_score = team.penalty
+    account_score = 0
+
+    for u in users:
+        account_score += u.point
+        if u.team_id == team_id:
+            team_score += u.point
+
+    print(user.point)
+    print(team_score)
+    print(account_score)
+    # score = {"user_score": 10, "team_score": 20, "account_score": 30}
+    return {"message": "ok"}
