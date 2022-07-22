@@ -24,7 +24,7 @@ def create_account(account: a_sc.AccountCreate, db: Session = Depends(rb.get_db)
     return create_account_query(db=db, account=account)
 
 
-@router.get("/score")
+@router.get("/score", response_model=a_sc.AccountScore)
 def get_score_info_api(
     db: Session = Depends(rb.get_db), current_user: str = Depends(get_current_user)
 ):

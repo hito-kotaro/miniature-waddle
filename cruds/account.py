@@ -50,21 +50,46 @@ def create_account_query(db: Session, account: a_sc.AccountCreate):
     return new_account
 
 
+def get_account_score(db: Session, account_id: int):
+    teams = db.query(Team).filter(Team.account_id == account_id).all()
+    users = db.query(User).filter(User.account_id == account_id).all()
+
+    all_penalty = 0
+    for t in teams:
+        all_penalty += t.penalty
+
+    all_point = 0
+    for u in users:
+        all_point += u.point
+
+    return all_point - all_penalty
+
+
 def get_score_info_query(db: Session, account_id: int, user_id: int, team_id: int):
     user = db.query(User).filter(User.id == user_id).first()
-    users = db.query(User).filter(User.account_id == account_id).all()
+    users = (
+        db.query(User)
+        .filter(User.account_id == account_id, User.team_id == team_id)
+        .all()
+    )
     team = db.query(Team).filter(Team.id == team_id).first()
 
-    team_score = team.penalty
-    account_score = 0
+    # 個人のポイント　OK
+    user_score = user.point
+    # チームのポイント 同じチームIDを持つuserのpointを合計する
+    team_score = -1 * team.penalty
 
     for u in users:
-        account_score += u.point
-        if u.team_id == team_id:
-            team_score += u.point
+        team_score += u.point
 
-    print(user.point)
+    account_score = get_account_score(db=db, account_id=account_id)
+
+    print(user_score)
     print(team_score)
     print(account_score)
     # score = {"user_score": 10, "team_score": 20, "account_score": 30}
-    return {"message": "ok"}
+    return {
+        "user_score": user_score,
+        "team_score": team_score,
+        "account_score": account_score,
+    }

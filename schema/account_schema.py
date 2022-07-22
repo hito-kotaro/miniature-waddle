@@ -13,3 +13,9 @@ class AccountInfo(BaseModel):
 
     class Config:
         orm_mode = True
+
+
+class AccountScore(BaseModel):
+    user_score: int
+    team_score: int
+    account_score: int
