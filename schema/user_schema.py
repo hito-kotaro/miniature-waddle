@@ -25,6 +25,7 @@ class UserAttributepdate(BaseModel):
 
 
 class SmallUserInfo(BaseModel):
+    id: int
     name: str
     team: str
     role: str

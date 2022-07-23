@@ -112,6 +112,7 @@ def get_user_small_info_by_id(db: Session, user_id: int):
         team_name = "no team"
 
     small_info: u_sc.SmallUserInfo = {
+        "id": user.User.id,
         "name": user.User.name,
         "team": team_name,
         "role": user.Role.name,
